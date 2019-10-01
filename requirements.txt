@@ -1,1 +1,2 @@
 Django==2.2.5
+python-telegram-bot==12.1.1
