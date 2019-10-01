@@ -30,6 +30,7 @@ def main():
 
     logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
+
     while True:
         try:
             echo(bot)
