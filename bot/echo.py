@@ -36,7 +36,7 @@ def main():
         except NetworkError:
             sleep(1)
         except Unauthorized:
-            # The user has removed or blocked the bot.
+            # The user has removed or blocked the bot
             update_id += 1
 
 
