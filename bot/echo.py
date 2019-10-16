@@ -36,6 +36,12 @@ def start_handler(bot, update):
     update.message.reply_text("Hello from Python!\nPress /random to get random number")
 
 
+def mode_handler(bot, update):
+    # Creating a handler-function for /start command
+    logger.info("{} Enviroment".format(mode))
+    update.message.reply_text("{} Enviroment".format(mode))
+
+
 def random_handler(bot, update):
     # Creating a handler-function for /random command
     number = random.randint(0, 10)
@@ -49,5 +55,6 @@ if __name__ == '__main__':
 
     updater.dispatcher.add_handler(CommandHandler("start", start_handler))
     updater.dispatcher.add_handler(CommandHandler("random", random_handler))
+    updater.dispatcher.add_handler(CommandHandler("mode", mode_handler))
 
     run(updater)
