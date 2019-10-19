@@ -1,56 +1,60 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-"""Simple Bot to reply to Telegram messages.
-
-This is built on the API wrapper, see echobot2.py to see the same example built
-on the telegram.ext bot framework.
-This program is dedicated to the public domain under the CC0 license.
-"""
 import logging
-import telegram
-from telegram.error import NetworkError, Unauthorized
-from time import sleep
+import os
+import random
+import sys
+
+from telegram.ext import Updater, CommandHandler
+
+# Enabling logging
+logging.basicConfig(level=logging.INFO,
+                    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+logger = logging.getLogger()
+
+# Getting mode, so we could define run function for local and Heroku setup
+mode = os.getenv("MODE")
+TOKEN = os.getenv("TOKEN")
+if mode == "dev":
+    def run(updater):
+        updater.start_polling()
+elif mode == "prod":
+    def run(updater):
+        PORT = int(os.environ.get("PORT", "8443"))
+        HEROKU_APP_NAME = os.environ.get("HEROKU_APP_NAME")
+        # Code from https://github.com/python-telegram-bot/python-telegram-bot/wiki/Webhooks#heroku
+        updater.start_webhook(listen="0.0.0.0",
+                              port=PORT,
+                              url_path=TOKEN)
+        updater.bot.set_webhook("https://{}.herokuapp.com/{}".format(HEROKU_APP_NAME, TOKEN))
+else:
+    logger.error("No MODE specified!")
+    sys.exit(1)
 
 
-update_id = None
+def start_handler(bot, update):
+    # Creating a handler-function for /start command 
+    logger.info("User {} started bot".format(update.effective_user["id"]))
+    update.message.reply_text("Hello from Python!\nPress /random to get random number")
 
 
-def main():
-    """Run the bot."""
-    global update_id
-    # Telegram Bot Authorization Token
-    bot = telegram.Bot('938353601:AAEGthXARwwaiKfWBRhhmMeRdozX4aEeqBg')
-
-    # get the first pending update_id, this is so we can skip over it in case
-    # we get an "Unauthorized" exception.
-    try:
-        update_id = bot.get_updates()[0].update_id
-    except IndexError:
-        update_id = None
-
-    logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-
-    while True:
-        try:
-            echo(bot)
-        except NetworkError:
-            sleep(1)
-        except Unauthorized:
-            # The user has removed or blocked the bot.
-            update_id += 1
+def mode_handler(bot, update):
+    # Creating a handler-function for /start command
+    logger.info("{} Enviroment".format(mode))
+    update.message.reply_text("{} Enviroment".format(mode))
 
 
-def echo(bot):
-    """Echo the message the user sent."""
-    global update_id
-    # Request updates after the last update_id
-    for update in bot.get_updates(offset=update_id, timeout=10):
-        update_id = update.update_id + 1
-
-        if update.message:  # your bot can receive updates without messages
-            # Reply to the message
-            update.message.reply_text(update.message.text)
+def random_handler(bot, update):
+    # Creating a handler-function for /random command
+    number = random.randint(0, 10)
+    logger.info("User {} randomed number {}".format(update.effective_user["id"], number))
+    update.message.reply_text("Random number: {}".format(number))
 
 
 if __name__ == '__main__':
-    main()
+    logger.info("Starting bot")
+    updater = Updater(TOKEN)
+
+    updater.dispatcher.add_handler(CommandHandler("start", start_handler))
+    updater.dispatcher.add_handler(CommandHandler("random", random_handler))
+    updater.dispatcher.add_handler(CommandHandler("mode", mode_handler))
+
+    run(updater)
