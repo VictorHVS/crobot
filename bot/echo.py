@@ -6,7 +6,7 @@ import sys
 from telegram.ext import Updater, CommandHandler
 
 # Enabling logging
-logging.basicConfig(level=logging.INFO,
+logging.basicConfig(level=logging.DEBUG,
                     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 logger = logging.getLogger()
 
@@ -49,6 +49,24 @@ def random_handler(bot, update):
     update.message.reply_text("Random number: {}".format(number))
 
 
+# new functions
+def cadastrar_item(bot, update):
+   itens=update.message.text.split(" ")
+   update.message.reply_text(f"Item name:{itens[1]} Item Amount:{itens[2]}")
+
+def deletar_item(bot, update):
+    pass
+
+def finalizar_item(bot, update):
+    pass
+
+def listar_itens(bot, update):
+    pass 
+ 
+
+
+
+
 if __name__ == '__main__':
     logger.info("Starting bot")
     updater = Updater(TOKEN)
@@ -56,5 +74,6 @@ if __name__ == '__main__':
     updater.dispatcher.add_handler(CommandHandler("start", start_handler))
     updater.dispatcher.add_handler(CommandHandler("random", random_handler))
     updater.dispatcher.add_handler(CommandHandler("mode", mode_handler))
+    updater.dispatcher.add_handler(CommandHandler("cadastrar_item", cadastrar_item))
 
     run(updater)
