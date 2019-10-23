@@ -50,20 +50,20 @@ def random_handler(bot, update):
 
 
 def cadastrar_item(bot, update):
-   itens=update.message.text.split(" ")
-   update.message.reply_text(f"Item name:{itens[1]} Item Amount:{itens[2]}")
+    itens = update.message.text.split(" ")
+    update.message.reply_text(f"Item name:{itens[1]} Item Amount:{itens[2]}")
+
 
 def deletar_item(bot, update):
     pass
 
+
 def finalizar_item(bot, update):
     pass
 
+
 def listar_itens(bot, update):
-    pass 
- 
-
-
+    pass
 
 
 if __name__ == '__main__':
