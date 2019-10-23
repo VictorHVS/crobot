@@ -49,7 +49,6 @@ def random_handler(bot, update):
     update.message.reply_text("Random number: {}".format(number))
 
 
-# new functions
 def cadastrar_item(bot, update):
    itens=update.message.text.split(" ")
    update.message.reply_text(f"Item name:{itens[1]} Item Amount:{itens[2]}")
