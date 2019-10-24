@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  postgres-database:
+    image: postgres
+    restart: always
+    ports:
+      - 5439:5432
+    environment:
+      POSTGRES_USER: crobot
+      POSTGRES_DB: crobot
+      POSTGRES_PASSWORD: crobot

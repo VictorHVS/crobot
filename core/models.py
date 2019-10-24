@@ -1,5 +1,5 @@
-from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.db import models
 
 
 class User(AbstractUser):
@@ -11,7 +11,7 @@ class User(AbstractUser):
     class Meta:
         verbose_name = 'User'
         verbose_name_plural = 'Users'
-        db_table = "%s_%s" % (AbstractUser._meta.app_label, "users")
+        db_table = 'core_users'
         ordering = ('name',)
 
     def __str__(self):
@@ -26,7 +26,7 @@ class Item(models.Model):
     class Meta:
         verbose_name = 'Item'
         verbose_name_plural = 'Itens'
-        db_table = "%s_%s" % (models.Model._meta.app_label, "itens")
+        db_table = "core_itens"
         ordering = ('name',)
 
     def __str__(self):
